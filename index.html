@@ -151,10 +151,62 @@ header .sub { color: var(--muted); }
 .flower:focus, .flower:focus-visible { outline: none; }
 .flower:focus-visible .head { stroke: var(--focus); stroke-width: 4; }
 
+/* how big, what about */
+.sizes { display: flex; gap: 12px; flex-wrap: wrap; }
+.size { display: grid; justify-items: center; gap: 6px; min-width: 96px; min-height: 96px; padding: 10px 14px; border-radius: 18px; border: 2px solid var(--line); background: var(--card); font-weight: 700; }
+.size i { width: var(--s); height: var(--s); border-radius: 50%; background: var(--c); display: block; align-self: center; }
+.chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip { border: 2px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 16px; min-height: 48px; font-weight: 700; }
+.chip[aria-pressed="true"] { background: color-mix(in srgb, var(--c, var(--okay)) 70%, var(--card)); border-color: var(--fg); }
+.field { font: inherit; width: 100%; max-width: 420px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--card); color: var(--fg); }
+.field:focus-visible { outline: 4px solid var(--focus); outline-offset: 2px; }
+/* squeeze ball */
+.ball { width: 160px; height: 160px; border-radius: 50%; border: 0; touch-action: none; -webkit-touch-callout: none;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.9) 0 9%, color-mix(in srgb, var(--c) 85%, white) 10%, var(--c) 75%);
+  box-shadow: inset 0 -8px 0 rgba(0,0,0,.06); transition: transform .45s cubic-bezier(.3,1.7,.5,1), box-shadow .3s; }
+.ball.squeeze { transform: scale(1.18, .68); transition: transform 2.5s ease-in, box-shadow .3s; }
+.ball.ready { box-shadow: 0 0 0 12px color-mix(in srgb, var(--c) 45%, transparent); }
+.ball:focus-visible { outline: 4px solid var(--focus); outline-offset: 6px; }
+/* worry jar */
+.jarbox { position: relative; width: 200px; height: 250px; }
+.jar { position: absolute; left: 25px; right: 25px; bottom: 0; height: 150px; border-radius: 22px 22px 34px 34px; border: 4px solid color-mix(in srgb, var(--calm) 70%, var(--fg)); background: color-mix(in srgb, var(--calm) 30%, transparent); }
+.lid { position: absolute; left: 18px; right: 18px; top: 84px; height: 22px; border-radius: 10px; background: var(--worried); border: 3px solid color-mix(in srgb, var(--worried) 60%, var(--fg));
+  transform: translateY(-40px); opacity: 0; transition: transform .6s ease .9s, opacity .3s ease .9s; }
+.wnote { position: absolute; left: 10px; right: 10px; top: 0; min-height: 56px; display: grid; place-items: center; text-align: center; padding: 8px 12px; border-radius: 30px;
+  background: color-mix(in srgb, var(--tired) 60%, var(--card)); font-weight: 700; font-size: .95rem; transition: transform .9s ease-in, opacity .9s; word-break: break-word; }
+.jarbox.drop .wnote { transform: translateY(160px) scale(.45); opacity: .85; }
+.jarbox.drop .lid { transform: none; opacity: 1; }
+/* kind words, stretch, notice */
+.kindcard { max-width: 420px; width: 100%; border-radius: 22px; padding: 26px 20px; text-align: center; font-family: var(--display); font-size: 1.6rem; font-weight: 700; line-height: 1.25;
+  background: color-mix(in srgb, var(--c) 45%, var(--card)); animation: rise .5s ease; }
+@keyframes rise { from { transform: translateY(12px); opacity: 0; } }
+.bigemoji { font-size: 4rem; line-height: 1; }
+.bar { width: min(320px, 100%); height: 12px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--c); border-radius: inherit; }
+.dots { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.dot { width: 56px; height: 56px; border-radius: 50%; border: 3px dashed color-mix(in srgb, var(--c) 70%, var(--fg)); background: var(--card); font-size: 1.6rem; }
+.dot[aria-pressed="true"] { border-style: solid; background: var(--c); }
+/* my week */
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; list-style: none; margin: 0; padding: 0; text-align: center; }
+.week li { display: grid; justify-items: center; gap: 4px; font-size: .85rem; font-weight: 700; color: var(--muted); }
+.week svg, .week .none { width: min(44px, 100%); height: auto; aspect-ratio: 1; }
+.week .none { border-radius: 50%; border: 2px dashed var(--line); }
+.week li.today { color: var(--fg); }
+.weeknote { color: var(--muted); }
+/* learn about feelings */
+.guidefaces { display: flex; gap: 8px; flex-wrap: wrap; }
+.gface { border: 2px solid transparent; background: transparent; border-radius: 16px; padding: 4px 6px; display: grid; justify-items: center; font-size: .8rem; font-weight: 700; min-width: 56px; }
+.gface svg { width: 44px; height: 44px; }
+.gface[aria-pressed="true"] { border-color: var(--fg); background: color-mix(in srgb, var(--c) 40%, var(--card)); }
+.guide { border-radius: 18px; padding: 16px 18px; background: color-mix(in srgb, var(--c) 30%, var(--card)); display: grid; gap: 8px; }
+.guide h3 { margin: 0; font-family: var(--display); font-size: 1.3rem; }
+.guide b { display: block; }
+
 @media (prefers-reduced-motion: reduce) {
   .feeling, .breath .petal-ring { transition: none; }
   .bubble { animation: none; }
   .bubble.popped { animation: none; opacity: 0; }
+  .ball, .ball.squeeze, .lid, .wnote, .kindcard { transition: none; animation: none; }
 }
 /* install tip */
 .install { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--calm) 35%, var(--card)); }
@@ -199,6 +251,18 @@ header .sub { color: var(--muted); }
     <p class="friends" id="friends" hidden></p>
     <div class="legend" id="legend"></div>
   </section>
+  <section class="card" aria-labelledby="weekTitle">
+    <h2 id="weekTitle">My feelings this week</h2>
+    <ol class="week" id="week"></ol>
+    <p class="weeknote" id="weekNote"></p>
+  </section>
+
+  <section class="card" aria-labelledby="guideTitle">
+    <h2 id="guideTitle">Learn about feelings</h2>
+    <p class="weeknote">Tap a face to learn about that feeling.</p>
+    <div class="guidefaces" id="guideFaces" role="group" aria-label="Feelings to learn about"></div>
+    <div id="guide" aria-live="polite"></div>
+  </section>
 </div>
 
 <script type="module">
@@ -207,13 +271,13 @@ import { createGarden3D } from "./garden3d.js";
 // ---------- feelings ----------
 // mouth: path for the face; reply: what the garden says back; help: an extra gentle line for hard feelings
 const FEELINGS = [
-  { id: "happy", label: "Happy", mouth: "M22 40c5 7 21 7 26 0", eyes: "open", reply: "Yay! Happy days help flowers grow tall.", activity: "bubbles" },
-  { id: "calm", label: "Calm", mouth: "M24 41c4 3 18 3 22 0", eyes: "soft", reply: "Calm is a lovely feeling. Let's keep it going.", activity: "breathe" },
-  { id: "okay", label: "Okay", mouth: "M25 42h20", eyes: "open", reply: "Okay is okay. Thanks for checking in.", activity: "bubbles" },
-  { id: "tired", label: "Tired", mouth: "M27 43c3-2 13-2 16 0", eyes: "closed", reply: "Being tired is hard. Let's take it slow.", activity: "breathe" },
-  { id: "sad", label: "Sad", mouth: "M23 46c5-7 19-7 24 0", eyes: "open", reply: "It's okay to feel sad. You are not alone.", help: "Talking to someone you trust can help too.", activity: "breathe" },
-  { id: "worried", label: "Worried", mouth: "M24 44c3-3 6 2 9 0s6-3 9 0", eyes: "wide", reply: "Worried feelings feel big. Let's breathe slowly together.", help: "Talking to someone you trust can help too.", activity: "breathe" },
-  { id: "angry", label: "Angry", mouth: "M24 45c5-5 17-5 22 0", eyes: "angry", reply: "Angry feelings are strong. Let's let some out with slow breaths.", help: "If you feel unsafe, tell a trusted person right away.", activity: "breathe" },
+  { id: "happy", label: "Happy", mouth: "M22 40c5 7 21 7 26 0", eyes: "open", reply: "Yay! Happy days help flowers grow tall.", activity: "thankful" },
+  { id: "calm", label: "Calm", mouth: "M24 41c4 3 18 3 22 0", eyes: "soft", reply: "Calm is a lovely feeling. Let's keep it going.", activity: "notice" },
+  { id: "okay", label: "Okay", mouth: "M25 42h20", eyes: "open", reply: "Okay is okay. Thanks for checking in.", activity: "thankful" },
+  { id: "tired", label: "Tired", mouth: "M27 43c3-2 13-2 16 0", eyes: "closed", reply: "Being tired is hard. Let's take it slow.", activity: "stretch" },
+  { id: "sad", label: "Sad", mouth: "M23 46c5-7 19-7 24 0", eyes: "open", reply: "It's okay to feel sad. You are not alone.", help: "Talking to someone you trust can help too.", activity: "kind" },
+  { id: "worried", label: "Worried", mouth: "M24 44c3-3 6 2 9 0s6-3 9 0", eyes: "wide", reply: "Worried feelings feel big. Let's make them a little smaller together.", help: "Talking to someone you trust can help too.", activity: "jar" },
+  { id: "angry", label: "Angry", mouth: "M24 45c5-5 17-5 22 0", eyes: "angry", reply: "Angry feelings are strong. Let's let some of it out, safely.", help: "If you feel unsafe, tell a trusted person right away.", activity: "squeeze" },
 ];
 const byId = Object.fromEntries(FEELINGS.map((f) => [f.id, f]));
 const col = (id) => `var(--${id})`;
@@ -257,28 +321,59 @@ $("feelings").addEventListener("click", (e) => {
   pick(byId[b.dataset.f]);
 });
 
+const SIZES = [{ v: 1, label: "A little", word: "a little " }, { v: 2, label: "Medium", word: "" }, { v: 3, label: "A lot", word: "very " }];
+const ABOUT = ["School", "Home", "Family", "Friends", "Play", "Sleep", "My body", "Something new"];
+const ACT_NAMES = { breathe: "Breathe with the flower", bubbles: "Pop the bubbles", squeeze: "Squeeze the ball", jar: "Put the worry in a jar",
+  kind: "Read kind words", stretch: "Do a gentle stretch", thankful: "Find happy things", notice: "Notice things around you" };
+const todayFlower = () => garden.flowers.find((x) => x.d === todayKey());
+
 function pick(f) {
   current = f;
   const d = todayKey();
-  const existing = garden.flowers.find((x) => x.d === d);
-  if (existing) { existing.f = f.id; existing.bloom = false; } else garden.flowers.push({ d, f: f.id, bloom: false });
+  const existing = todayFlower();
+  if (existing) { existing.f = f.id; existing.bloom = false; delete existing.size; delete existing.why; } else garden.flowers.push({ d, f: f.id, bloom: false });
   garden.flowers.sort((a, b) => a.d.localeCompare(b.d));
   save();
-  renderFeelings(); renderGarden();
+  renderFeelings(); renderGarden(); renderWeek();
+  // step 1: how big is the feeling?
+  $("step").innerHTML = `<div class="reply" style="--c:${col(f.id)}">
+      <p class="big">How big is your ${f.label.toLowerCase()} feeling?</p>
+      <div class="sizes">${SIZES.map((z) => `<button type="button" class="size" data-act="size" data-v="${z.v}"><i style="--s:${14 + z.v * 14}px"></i>${z.label}</button>`).join("")}</div>
+    </div>`;
+  $("step").querySelector("button")?.focus({ preventScroll: true });
+}
+
+function askAbout() {
+  const f = current;
+  $("step").innerHTML = `<div class="reply" style="--c:${col(f.id)}">
+      <p class="big">What is it about?</p>
+      <p class="help">Pick one, or skip. It is only saved on this device.</p>
+      <div class="chips">${ABOUT.map((a) => `<button type="button" class="chip" data-act="about" data-v="${a}">${a}</button>`).join("")}</div>
+      <div class="choices"><button type="button" class="btn soft" data-act="about" data-v="">Skip</button></div>
+    </div>`;
+  $("step").querySelector("button")?.focus({ preventScroll: true });
+}
+
+function showReply() {
+  const f = current;
+  const acts = [f.activity, ...["breathe", "bubbles"].filter((a) => a !== f.activity)];
   $("step").innerHTML = `<div class="reply" style="--c:${col(f.id)}">
       <p class="big">${f.reply}</p>
       ${f.help ? `<p class="help">${f.help}</p>` : ""}
-      <p>A ${f.label.toLowerCase()} flower is planted. Do a calm activity to help it bloom:</p>
-      <div class="choices">
-        <button type="button" class="btn" data-act="${f.activity}">${f.activity === "breathe" ? "Breathe with the flower" : "Pop the bubbles"}</button>
-        <button type="button" class="btn soft" data-act="${f.activity === "breathe" ? "bubbles" : "breathe"}">${f.activity === "breathe" ? "Pop the bubbles" : "Breathe with the flower"}</button>
-      </div>
+      <p>${/^[aeiou]/i.test(f.label) ? "An" : "A"} ${f.label.toLowerCase()} flower is planted. Do a calm activity to help it bloom:</p>
+      <div class="choices">${acts.map((a, k) => `<button type="button" class="btn${k ? " soft" : ""}" data-act="${a}">${ACT_NAMES[a]}</button>`).join("")}</div>
     </div>`;
+  $("step").querySelector("button")?.focus({ preventScroll: true });
 }
 
 $("step").addEventListener("click", (e) => {
   const b = e.target.closest("[data-act]"); if (!b) return;
-  if (b.dataset.act === "breathe") breathe(); else if (b.dataset.act === "bubbles") bubbles(); else if (b.dataset.act === "again") { $("step").innerHTML = ""; current = null; }
+  const act = b.dataset.act;
+  const today = todayFlower();
+  if (act === "size") { if (today) { today.size = +b.dataset.v; save(); renderGarden(); } askAbout(); }
+  else if (act === "about") { if (today && b.dataset.v) { today.why = b.dataset.v; save(); } showReply(); }
+  else if (act === "again") { $("step").innerHTML = ""; current = null; }
+  else if (ACTIVITIES[act]) ACTIVITIES[act]();
 });
 
 // ---------- activities ----------
@@ -330,10 +425,159 @@ function bubbles() {
   }
 }
 
+// Angry: squeeze the ball tight, then let go
+function squeeze() {
+  const rounds = 3, HOLD = 2500;
+  let n = 0, holding = false, t0 = 0, timer = null;
+  $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+    <p class="breath-text" id="sqText">Press and hold the ball. Squeeze it tight!</p>
+    <button type="button" class="ball" id="ball" aria-label="Squeeze ball: press and hold, then let go"></button>
+    <p class="count" id="sqCount">Squeeze 1 of ${rounds}</p>
+  </div>`;
+  const ball = $("ball"), text = $("sqText");
+  const start = (e) => {
+    if (holding) return;
+    e.preventDefault();
+    holding = true; t0 = Date.now();
+    ball.classList.add("squeeze");
+    text.textContent = "Squeeze… squeeze… squeeze…";
+    timer = setTimeout(() => { ball.classList.add("ready"); text.textContent = "Now let go!"; }, HOLD);
+  };
+  const stop = () => {
+    if (!holding) return;
+    holding = false; clearTimeout(timer);
+    ball.classList.remove("squeeze", "ready");
+    if (Date.now() - t0 < HOLD) { text.textContent = "Hold it a little longer, then let go."; return; }
+    n++;
+    if (n >= rounds) return setTimeout(() => done("You squeezed out the angry feelings!"), 400);
+    text.textContent = "Ahh… let it all go. Again!";
+    $("sqCount").textContent = `Squeeze ${n + 1} of ${rounds}`;
+  };
+  ball.addEventListener("pointerdown", start);
+  ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => ball.addEventListener(ev, stop));
+  ball.addEventListener("contextmenu", (e) => e.preventDefault());
+  ball.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) start(e); });
+  ball.addEventListener("keyup", (e) => { if (e.key === " " || e.key === "Enter") stop(); });
+}
+
+// Worried: put the worry in a jar (the words are never saved)
+function jar() {
+  const ideas = ["School", "Friends", "Something new", "Family", "Feeling sick", "Something else"];
+  $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+    <p class="breath-text">Put your worry in the jar</p>
+    <p class="help">Type your worry, or pick one. It is not saved anywhere.</p>
+    <input class="field" id="worry" maxlength="80" placeholder="I am worried about…" aria-label="Your worry" autocomplete="off">
+    <div class="chips">${ideas.map((w) => `<button type="button" class="chip" data-worry="${w}">${w}</button>`).join("")}</div>
+    <div class="jarbox" id="jarbox"><div class="wnote" id="wnote">Your worry</div><div class="jar"></div><div class="lid"></div></div>
+    <button type="button" class="btn" id="toJar">Put it in the jar</button>
+  </div>`;
+  const input = $("worry"), note = $("wnote");
+  const show = () => { note.textContent = input.value.trim() || "Your worry"; };
+  input.addEventListener("input", show);
+  $("step").querySelectorAll("[data-worry]").forEach((b) => b.addEventListener("click", () => { input.value = b.dataset.worry; show(); }));
+  $("toJar").addEventListener("click", () => {
+    $("toJar").disabled = true; input.disabled = true;
+    $("jarbox").classList.add("drop");
+    setTimeout(() => done("Your worry is tucked away in the jar. You can talk about it with someone you trust."), reduceMotion ? 400 : 1700);
+  });
+}
+
+// Sad: kind words, one at a time, then a hug
+function kind() {
+  const words = ["You are loved.", "It's okay to cry.", "Sad feelings don't last forever.", "You are not alone.", "You are doing your best, and that is enough.", "Tomorrow is a new day."];
+  const pickd = words.slice().sort(() => Math.random() - 0.5).slice(0, 3);
+  let i = 0;
+  const show = () => {
+    const last = i >= pickd.length;
+    $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+      <p class="count">${last ? "One more thing" : `Kind word ${i + 1} of ${pickd.length}`}</p>
+      <div class="kindcard">${last ? "Give yourself a big, warm hug 🤗" : pickd[i]}</div>
+      <button type="button" class="btn" id="kindNext">${last ? "I hugged myself" : i < pickd.length - 1 ? "Next kind word" : "Next"}</button>
+    </div>`;
+    $("kindNext").focus({ preventScroll: true });
+    $("kindNext").addEventListener("click", () => { if (last) done("Those were kind words for a kind person."); else { i++; show(); } });
+  };
+  show();
+}
+
+// Tired: a gentle stretch, a few seconds per step
+function stretch() {
+  const steps = [["🌻", "Reach up high like a tall sunflower"], ["🙆", "Roll your shoulders slowly, back and down"], ["🖐️", "Wiggle your fingers and your toes"], ["😮‍💨", "Take a big, slow yawn and stretch"]];
+  const SECS = 6;
+  let i = 0, timer = null;
+  const show = () => {
+    clearInterval(timer);
+    if (i >= steps.length) return done("You stretched like a sleepy flower waking up!");
+    const [emoji, text] = steps[i];
+    $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+      <p class="count">Stretch ${i + 1} of ${steps.length}</p>
+      <div class="bigemoji" aria-hidden="true">${emoji}</div>
+      <p class="breath-text">${text}</p>
+      <div class="bar" aria-hidden="true"><i id="stretchBar"></i></div>
+      <button type="button" class="btn soft" id="stretchNext">Next</button>
+    </div>`;
+    const el = $("stretchBar");
+    let t = 0;
+    timer = setInterval(() => {
+      if (!document.body.contains(el)) return clearInterval(timer);
+      t += 0.1; el.style.width = `${Math.min(100, (t / SECS) * 100)}%`;
+      if (t >= SECS) { i++; show(); }
+    }, 100);
+    $("stretchNext").addEventListener("click", () => { i++; show(); });
+  };
+  show();
+}
+
+// Happy and okay: find three happy things
+function thankful() {
+  const things = ["👨‍👩‍👧 Family", "🧑‍🤝‍🧑 Friends", "🐶 Pets", "🍎 Yummy food", "🎵 Music", "🎮 Games", "☀️ Sunshine", "📚 Books", "🧸 Toys", "🏠 Home", "🌳 Nature", "💛 Me!"];
+  const picked = [];
+  $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+    <p class="breath-text">Pick 3 things that make you happy</p>
+    <div class="chips" style="justify-content:center">${things.map((t) => `<button type="button" class="chip" aria-pressed="false" data-thing="${t}">${t}</button>`).join("")}</div>
+    <p class="count" id="thankCount">3 to go</p>
+  </div>`;
+  $("step").querySelectorAll("[data-thing]").forEach((b) => b.addEventListener("click", () => {
+    if (picked.length >= 3 && b.getAttribute("aria-pressed") !== "true") return;
+    const on = b.getAttribute("aria-pressed") !== "true";
+    b.setAttribute("aria-pressed", String(on));
+    const name = b.dataset.thing.replace(/^\S+\s/, "");
+    if (on) picked.push(name); else picked.splice(picked.indexOf(name), 1);
+    const left = 3 - picked.length;
+    $("thankCount").textContent = left ? `${left} to go` : "All picked!";
+    if (!left) setTimeout(() => done(`${picked[0]}, ${picked[1]} and ${picked[2]}: lovely happy things!`), 600);
+  }));
+}
+
+// Calm: notice 5, 4, 3, 2, 1 things around you
+function notice() {
+  const steps = [[5, "things you can see", "👀"], [4, "things you can hear", "👂"], [3, "things you can touch", "✋"], [2, "things you can smell", "👃"], [1, "thing you love", "💛"]];
+  let i = 0;
+  const show = () => {
+    if (i >= steps.length) return done("You noticed so many things. Your mind feels calm and clear.");
+    const [n, what, emoji] = steps[i];
+    $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+      <div class="bigemoji" aria-hidden="true">${emoji}</div>
+      <p class="breath-text">Find ${n} ${what}</p>
+      <p class="help">Tap a circle for each one you find.</p>
+      <div class="dots">${Array.from({ length: n }, (_, k) => `<button type="button" class="dot" aria-pressed="false" aria-label="Found ${k + 1}"></button>`).join("")}</div>
+    </div>`;
+    const dots = [...$("step").querySelectorAll(".dot")];
+    dots[0].focus({ preventScroll: true });
+    dots.forEach((d) => d.addEventListener("click", () => {
+      d.setAttribute("aria-pressed", "true"); d.textContent = "✓";
+      if (dots.every((x) => x.getAttribute("aria-pressed") === "true")) { i++; setTimeout(show, 500); }
+    }));
+  };
+  show();
+}
+
+const ACTIVITIES = { breathe, bubbles, squeeze, jar, kind, stretch, thankful, notice };
+
 function done(msg) {
   const today = garden.flowers.find((x) => x.d === todayKey());
   if (today) today.bloom = true;
-  save(); renderGarden();
+  save(); renderGarden(); renderWeek();
   $("step").innerHTML = `<div class="reply" style="--c:${col(current.id)}">
     <p class="big">${msg} Your flower bloomed.</p>
     <p>Come back tomorrow to plant another one.</p>
@@ -505,13 +749,67 @@ function renderGarden() {
 }
 function showFlowerAt(i) {
   const fl = garden.flowers.slice(-28)[i];
-  if (fl) $("picked").textContent = `${nice(fl.d)}: you felt ${byId[fl.f].label.toLowerCase()}${fl.bloom ? " and your flower bloomed" : ""}.`;
+  if (!fl) return;
+  const big = SIZES.find((z) => z.v === fl.size)?.word ?? "";
+  const about = fl.why ? ` about ${fl.why.toLowerCase()}` : "";
+  $("picked").textContent = `${nice(fl.d)}: you felt ${big}${byId[fl.f].label.toLowerCase()}${about}${fl.bloom ? ", and your flower bloomed" : ""}.`;
 }
 const showFlower = (g) => showFlowerAt(+g.dataset.i);
 $("bed").addEventListener("click", (e) => { const g = e.target.closest(".flower"); if (g) showFlower(g); });
 $("bed").addEventListener("keydown", (e) => { const g = e.target.closest(".flower"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showFlower(g); } });
 
-function renderAll() { renderFeelings(); renderGarden(); }
+// ---------- my week ----------
+const HARD = ["sad", "worried", "angry"];
+function renderWeek() {
+  const days = [];
+  for (let k = 6; k >= 0; k--) {
+    const dt = new Date(); dt.setDate(dt.getDate() - k);
+    const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+    days.push({ key, short: dt.toLocaleDateString(undefined, { weekday: "short" }), fl: garden.flowers.find((x) => x.d === key) });
+  }
+  $("week").innerHTML = days.map((d, k) => `<li class="${k === 6 ? "today" : ""}" aria-label="${nice(d.key)}: ${d.fl ? byId[d.fl.f].label : "no check-in"}">
+      ${d.fl ? face(byId[d.fl.f]) : '<span class="none"></span>'}<span aria-hidden="true">${k === 6 ? "Today" : d.short}</span></li>`).join("");
+  const seen = days.filter((d) => d.fl).map((d) => d.fl.f);
+  if (!seen.length) { $("weekNote").textContent = "Check in each day to see your week here."; return; }
+  const counts = {};
+  seen.forEach((f) => { counts[f] = (counts[f] || 0) + 1; });
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  const hard = seen.filter((f) => HARD.includes(f)).length;
+  let note = `You checked in ${seen.length} day${seen.length === 1 ? "" : "s"} this week. `;
+  note += seen.length > 1 && top[1] > 1 ? `You felt ${byId[top[0]].label.toLowerCase()} the most. ` : "";
+  note += hard >= 3 ? "There were lots of big feelings this week. Talking to someone you trust can really help." : "Every feeling helps your garden grow.";
+  $("weekNote").textContent = note;
+}
+
+// ---------- learn about feelings ----------
+const GUIDE = {
+  happy: { body: "You might smile, laugh, or feel light and bouncy.", helps: "Share it! Tell someone, play a game, or dance.", ok: "Happy feelings are great to share." },
+  calm: { body: "Your body feels soft and slow, and breathing is easy.", helps: "Notice it and remember it, so you can find it again when things feel busy.", ok: "Calm is like a quiet garden inside you." },
+  okay: { body: "Not too up and not too down. Somewhere in the middle.", helps: "A walk, a snack, a song or a game can add a little sunshine.", ok: "Okay is perfectly okay." },
+  tired: { body: "Heavy eyes, lots of yawns, and a slow body. It can be hard to think.", helps: "Rest, a drink of water, a healthy snack, or going to bed a bit earlier.", ok: "Bodies need rest to grow, just like flowers." },
+  sad: { body: "A heavy chest, tears, or wanting to be alone.", helps: "Cry if you need to, get a hug, cuddle something soft, or talk to someone you trust.", ok: "Everyone feels sad sometimes. It will not last forever." },
+  worried: { body: "A tummy ache, a fast heartbeat, or lots of “what if” thoughts.", helps: "Slow breaths, telling a grown-up you trust, or putting the worry in the worry jar.", ok: "Worries feel big, but you don't have to carry them alone." },
+  angry: { body: "A hot face, tight fists, a fast heart, or wanting to shout.", helps: "Stop and breathe, squeeze a ball, stomp it out safely, or take a break and talk when you feel calmer.", ok: "Feeling angry is okay. Hurting people or things is not." },
+};
+let guideOn = null;
+function renderGuide() {
+  $("guideFaces").innerHTML = FEELINGS.map((f) => `<button type="button" class="gface" style="--c:${col(f.id)}" data-g="${f.id}" aria-pressed="${guideOn === f.id}">${face(f)}${f.label}</button>`).join("");
+  const f = byId[guideOn];
+  $("guide").innerHTML = f ? `<div class="guide" style="--c:${col(f.id)}">
+      <h3>Feeling ${f.label.toLowerCase()}</h3>
+      <p><b>In your body</b>${GUIDE[f.id].body}</p>
+      <p><b>Things that can help</b>${GUIDE[f.id].helps}</p>
+      <p><b>Remember</b>${GUIDE[f.id].ok}</p>
+    </div>` : "";
+}
+$("guideFaces").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-g]"); if (!b) return;
+  guideOn = guideOn === b.dataset.g ? null : b.dataset.g;
+  renderGuide();
+  if (guideOn) chime(guideOn);
+});
+
+function renderAll() { renderFeelings(); renderGarden(); renderWeek(); renderGuide(); }
 $("today").textContent = `Today is ${nice(todayKey())}.`;
 renderAll();
 

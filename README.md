@@ -1,7 +1,19 @@
 # Feelings Garden
 
-A gentle daily check-in app. Pick how you feel, do a calm activity (breathe with the flower or pop bubbles), and a
-flower grows in your garden for each day. Made to be easy for everyone: big buttons, a very readable font,
+A gentle daily check-in app. Pick how you feel, say how big the feeling is and what it is about, do a calm activity
+made for that feeling, and a flower grows in your garden for each day:
+
+| Feeling | Activity made for it |
+|---|---|
+| Angry | Squeeze the ball tight, then let go |
+| Worried | Put the worry in a jar (the words are never saved) |
+| Sad | Kind words, then a hug |
+| Tired | A gentle stretch |
+| Happy, Okay | Pick 3 things that make you happy |
+| Calm | Notice 5, 4, 3, 2, 1 things around you |
+
+Breathing with the flower and popping bubbles are there for every feeling. "My feelings this week" shows the last
+seven days, and "Learn about feelings" explains what each feeling can feel like in the body and what helps. Made to be easy for everyone: big buttons, a very readable font,
 no timers, no scores and no ways to fail.
 
 ## Install it

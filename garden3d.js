@@ -85,7 +85,7 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
   // petals glow a little in their own colour, so the pastels stay light instead of muddy
   function tint(m, c) { m.color.set(c); m.emissive.set(c).multiplyScalar(0.28); return m; }
 
-  function makeFlower(f, bloom) {
+  function makeFlower(f, bloom, size = 2) {
     const g = new THREE.Group();
     const h = bloom ? 1.55 : 1.0;
     const stem = new THREE.Mesh(stemGeo, stemMat);
@@ -118,6 +118,7 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
       bud.position.y = 0.12;
       head.add(bud);
     }
+    head.scale.setScalar(size === 1 ? 0.78 : size === 3 ? 1.3 : 1); // a bigger feeling grows a bigger flower head
     g.add(head);
     g.add(new THREE.Mesh(shadowGeo, shadowMat));
     g.userData.head = head;
@@ -128,13 +129,13 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
   function update(list) {
     const next = [];
     list.forEach((fl, i) => {
-      const key = `${fl.d}|${fl.f}|${fl.bloom ? 1 : 0}`;
+      const key = `${fl.d}|${fl.f}|${fl.bloom ? 1 : 0}|${fl.size || 2}`;
       const r = 0.95 * Math.sqrt(i + 0.6);
       const a = i * GOLDEN;
       let item = flowers.find((x) => x.key === key);
       if (item) flowers = flowers.filter((x) => x !== item);
       else {
-        item = { key, group: makeFlower(fl.f, fl.bloom), born: performance.now(), phase: Math.random() * 6 };
+        item = { key, group: makeFlower(fl.f, fl.bloom, fl.size || 2), born: performance.now(), phase: Math.random() * 6 };
         if (reduceMotion) item.born = -1e9;
         world.add(item.group);
       }
