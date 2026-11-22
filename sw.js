@@ -1,6 +1,6 @@
 // Feelings Garden service worker: keeps the app working offline.
 // Bump VERSION whenever index.html or the icons change, so phones pick up the new version.
-const VERSION = "fg-v3";
+const VERSION = "fg-v4";
 const APP = ["./", "index.html", "garden3d.js", "vendor/three.module.min.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
 
 self.addEventListener("install", (e) => {

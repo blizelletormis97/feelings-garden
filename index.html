@@ -7,6 +7,10 @@
 <meta name="description" content="A gentle daily check-in: pick how you feel, do a calm activity, and grow a flower for each day.">
 <meta name="theme-color" content="#f5f8f2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17211a" media="(prefers-color-scheme: dark)">
+<script>
+// Bright or dark background, as chosen with the button at the top (otherwise the phone's own setting)
+try { const t = localStorage.getItem("feelingsGarden.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -79,6 +83,9 @@ header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 header .sprout { width: 56px; height: 56px; flex: none; }
 header .titles { flex: 1; min-width: 0; }
 header .sub { color: var(--muted); }
+.theme { border: 2px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 16px 8px 12px; font-weight: 700;
+  display: inline-flex; gap: 8px; align-items: center; min-height: 48px; flex: none; }
+.theme svg { width: 24px; height: 24px; }
 .date { font-weight: 700; color: var(--leaf-ink); }
 
 .card { background: var(--card); border-radius: var(--radius); padding: 22px; display: grid; gap: 16px; box-shadow: 0 2px 0 var(--line); }
@@ -158,6 +165,7 @@ header .sub { color: var(--muted); }
       <h1>Feelings Garden</h1>
       <p class="sub">Check in each day. Every feeling plants a flower. <span class="date" id="today"></span></p>
     </div>
+    <button type="button" class="theme" id="themeBtn"></button>
   </header>
 
   <section class="card install" id="installTip" hidden>
@@ -349,6 +357,27 @@ function flowerSVG(x, groundY, f, bloom, i, d) {
     <path d="M${x} ${groundY - 18}c-12 0-16-8-16-14 9 0 16 5 16 14z" fill="#a8d695"/>
     ${head}</g>`;
 }
+
+// ---------- bright or dark background ----------
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="#ffe28f"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24" fill="#d8ccf5" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
+const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : darkQuery.matches;
+function showThemeButton() {
+  const dark = isDark();
+  // The button says what it switches to
+  $("themeBtn").innerHTML = dark ? `${SUN}Bright` : `${MOON}Dark`;
+  $("themeBtn").setAttribute("aria-label", dark ? "Switch to a bright background" : "Switch to a dark background");
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.content = dark ? "#17211a" : "#f5f8f2"; });
+}
+$("themeBtn").addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("feelingsGarden.theme", next); } catch {}
+  showThemeButton();
+});
+darkQuery.addEventListener("change", showThemeButton);
+showThemeButton();
 
 // 3D garden when the device supports it (WebGL), the flat garden otherwise
 let g3d = null;
