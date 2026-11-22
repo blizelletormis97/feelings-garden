@@ -13,7 +13,11 @@ made for that feeling, and a flower grows in your garden for each day:
 | Calm | Notice 5, 4, 3, 2, 1 things around you |
 
 Breathing with the flower and popping bubbles are there for every feeling. "My feelings this week" shows the last
-seven days, and "Learn about feelings" explains what each feeling can feel like in the body and what helps. Made to be easy for everyone: big buttons, a very readable font,
+seven days, and "Learn about feelings" explains what each feeling can feel like in the body and what helps.
+
+"My diary" has writing prompts that match the day's feeling, tap-to-start sentences and stickers. Pages can be
+filtered by feeling, edited, deleted, and downloaded as a text file. Like the garden, the diary is kept only on the
+device (browser storage) and is never sent anywhere. Made to be easy for everyone: big buttons, a very readable font,
 no timers, no scores and no ways to fail.
 
 ## Install it

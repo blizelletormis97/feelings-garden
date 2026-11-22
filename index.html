@@ -202,6 +202,26 @@ header .sub { color: var(--muted); }
 .guide h3 { margin: 0; font-family: var(--display); font-size: 1.3rem; }
 .guide b { display: block; }
 
+/* diary */
+.diary-prompt { font-family: var(--display); font-size: 1.25rem; font-weight: 700; display: block; }
+.diarybox { max-width: none; min-height: 150px; resize: vertical; line-height: 1.5; font-size: 1.05rem;
+  background: repeating-linear-gradient(var(--card) 0 1.55em, color-mix(in srgb, var(--line) 70%, var(--card)) 1.55em calc(1.55em + 1px)); background-attachment: local; }
+.stickers { display: flex; gap: 6px; flex-wrap: wrap; }
+.sticker { border: 0; background: var(--sky); border-radius: 12px; min-width: 48px; min-height: 48px; font-size: 1.5rem; }
+.diary-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.diary-row h3 { margin: 0; font-family: var(--display); font-size: 1.3rem; }
+.entries { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.entry { border-radius: 18px; padding: 14px 16px; background: color-mix(in srgb, var(--c, var(--line)) 28%, var(--card)); border: 2px solid color-mix(in srgb, var(--c, var(--line)) 50%, var(--card)); display: grid; gap: 8px; scroll-margin-top: 20px; }
+.entry.flash { outline: 4px solid var(--focus); outline-offset: 2px; }
+.entry header { display: flex; gap: 10px; align-items: center; font-weight: 700; color: var(--muted); font-size: .95rem; }
+.entry header svg { width: 32px; height: 32px; flex: none; }
+.entry .text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.entry .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.entry .acts button, .linkbtn { border: 0; background: transparent; font-weight: 700; color: var(--leaf-ink); min-height: 44px; padding: 0 8px; text-decoration: underline; text-underline-offset: 3px; }
+.entry .acts .del.sure { color: #b23b45; }
+.diary-empty { color: var(--muted); }
+#diaryText:focus-visible, .sticker:focus-visible, .chip:focus-visible, .entry .acts button:focus-visible, .linkbtn:focus-visible { outline: 4px solid var(--focus); outline-offset: 2px; }
+
 @media (prefers-reduced-motion: reduce) {
   .feeling, .breath .petal-ring { transition: none; }
   .bubble { animation: none; }
@@ -251,6 +271,23 @@ header .sub { color: var(--muted); }
     <p class="friends" id="friends" hidden></p>
     <div class="legend" id="legend"></div>
   </section>
+  <section class="card" aria-labelledby="diaryTitle" id="diary">
+    <div class="row"><h2 id="diaryTitle">My diary</h2><span class="status">Only on this device</span></div>
+    <label class="diary-prompt" for="diaryText" id="diaryPrompt"></label>
+    <div class="chips" id="diaryStarters" role="group" aria-label="Ways to start"></div>
+    <textarea class="field diarybox" id="diaryText" rows="6" maxlength="2000" placeholder="Write anything you like…"></textarea>
+    <div class="stickers" id="stickers" role="group" aria-label="Add a sticker"></div>
+    <div class="choices">
+      <button type="button" class="btn" id="diarySave">Save to my diary</button>
+      <button type="button" class="btn soft" id="diaryCancel" hidden>Cancel</button>
+    </div>
+    <p class="count" id="diaryMsg" aria-live="polite"></p>
+    <div class="diary-row"><h3 id="pastTitle">My diary pages</h3><button type="button" class="linkbtn" id="diaryDownload" hidden>Download a copy</button></div>
+    <div class="chips" id="diaryFilter" role="group" aria-label="Show pages for a feeling"></div>
+    <ol class="entries" id="entries" aria-labelledby="pastTitle"></ol>
+    <button type="button" class="btn soft" id="diaryMore" hidden>Show older pages</button>
+  </section>
+
   <section class="card" aria-labelledby="weekTitle">
     <h2 id="weekTitle">My feelings this week</h2>
     <ol class="week" id="week"></ol>
@@ -334,7 +371,7 @@ function pick(f) {
   if (existing) { existing.f = f.id; existing.bloom = false; delete existing.size; delete existing.why; } else garden.flowers.push({ d, f: f.id, bloom: false });
   garden.flowers.sort((a, b) => a.d.localeCompare(b.d));
   save();
-  renderFeelings(); renderGarden(); renderWeek();
+  renderFeelings(); renderGarden(); renderWeek(); if (!editing) renderDiaryPrompt();
   // step 1: how big is the feeling?
   $("step").innerHTML = `<div class="reply" style="--c:${col(f.id)}">
       <p class="big">How big is your ${f.label.toLowerCase()} feeling?</p>
@@ -373,6 +410,7 @@ $("step").addEventListener("click", (e) => {
   if (act === "size") { if (today) { today.size = +b.dataset.v; save(); renderGarden(); } askAbout(); }
   else if (act === "about") { if (today && b.dataset.v) { today.why = b.dataset.v; save(); } showReply(); }
   else if (act === "again") { $("step").innerHTML = ""; current = null; }
+  else if (act === "write") { $("step").innerHTML = ""; current = null; openDiary(); }
   else if (ACTIVITIES[act]) ACTIVITIES[act]();
 });
 
@@ -581,7 +619,7 @@ function done(msg) {
   $("step").innerHTML = `<div class="reply" style="--c:${col(current.id)}">
     <p class="big">${msg} Your flower bloomed.</p>
     <p>Come back tomorrow to plant another one.</p>
-    <div class="choices"><button type="button" class="btn soft" data-act="again">Done</button></div>
+    <div class="choices"><button type="button" class="btn" data-act="write">Write in my diary</button><button type="button" class="btn soft" data-act="again">Done</button></div>
   </div>`;
 }
 
@@ -752,8 +790,11 @@ function showFlowerAt(i) {
   if (!fl) return;
   const big = SIZES.find((z) => z.v === fl.size)?.word ?? "";
   const about = fl.why ? ` about ${fl.why.toLowerCase()}` : "";
-  $("picked").textContent = `${nice(fl.d)}: you felt ${big}${byId[fl.f].label.toLowerCase()}${about}${fl.bloom ? ", and your flower bloomed" : ""}.`;
+  const pages = diary.filter((e) => e.d === fl.d).length;
+  $("picked").innerHTML = `${esc(`${nice(fl.d)}: you felt ${big}${byId[fl.f].label.toLowerCase()}${about}${fl.bloom ? ", and your flower bloomed" : ""}.`)}${pages
+    ? ` <button type="button" class="linkbtn" data-read="${fl.d}">Read ${pages === 1 ? "your diary page" : `your ${pages} diary pages`} from that day</button>` : ""}`;
 }
+$("picked").addEventListener("click", (e) => { const b = e.target.closest("[data-read]"); if (b) readDay(b.dataset.read); });
 const showFlower = (g) => showFlowerAt(+g.dataset.i);
 $("bed").addEventListener("click", (e) => { const g = e.target.closest(".flower"); if (g) showFlower(g); });
 $("bed").addEventListener("keydown", (e) => { const g = e.target.closest(".flower"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showFlower(g); } });
@@ -809,7 +850,146 @@ $("guideFaces").addEventListener("click", (e) => {
   if (guideOn) chime(guideOn);
 });
 
-function renderAll() { renderFeelings(); renderGarden(); renderWeek(); renderGuide(); }
+// ---------- diary (kept only on this device) ----------
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const DIARY = "feelingsGarden.diary";
+let diary = []; // [{ id, d: "YYYY-MM-DD", at: ISO time, f: feeling id or "", text }]
+try { const x = JSON.parse(localStorage.getItem(DIARY) || "[]"); if (Array.isArray(x)) diary = x; } catch {}
+const saveDiary = () => { try { localStorage.setItem(DIARY, JSON.stringify(diary)); return true; } catch { return false; } };
+
+const PROMPTS = {
+  happy: ["What made you happy today?", ["Today I smiled when…", "My favorite part of today was…", "I want to remember…"]],
+  calm: ["What helped you feel calm today?", ["I felt calm when…", "A peaceful moment today was…", "I'm thankful for…"]],
+  okay: ["How was your day?", ["Today I…", "Something small that was nice…", "Tomorrow I want to…"]],
+  tired: ["What made you tired today?", ["I feel tired because…", "Tonight I can rest by…", "Something cozy I like is…"]],
+  sad: ["What made you feel sad? It's okay to write it down.", ["I feel sad because…", "Something that might help is…", "Someone I can talk to is…"]],
+  worried: ["What are you worried about?", ["I'm worried that…", "One small thing I can do is…", "Someone I can tell is…"]],
+  angry: ["What made you angry?", ["I got angry when…", "Next time I could…", "Something that helps me calm down is…"]],
+  "": ["How was your day?", ["Today I…", "I'm thankful for…", "Tomorrow I want to…"]],
+};
+const STICKERS = ["🌸", "🌻", "⭐", "💛", "🌈", "☀️", "🌙", "🦋", "🐞", "🙂", "😢", "🤗"];
+let editing = null, filter = "", shown = 10;
+
+function renderDiaryPrompt() {
+  const [q, starters] = PROMPTS[todayFlower()?.f ?? ""] ?? PROMPTS[""];
+  $("diaryPrompt").textContent = editing ? "Change your diary page" : q;
+  $("diaryStarters").innerHTML = editing ? "" : starters.map((t) => `<button type="button" class="chip" data-start="${esc(t)}">${esc(t)}</button>`).join("");
+}
+function insertAt(text) {
+  const box = $("diaryText");
+  const a = box.selectionStart ?? box.value.length, b = box.selectionEnd ?? a;
+  box.value = (box.value.slice(0, a) + text + box.value.slice(b)).slice(0, 2000);
+  box.focus();
+  box.selectionStart = box.selectionEnd = Math.min(box.value.length, a + text.length);
+}
+$("diaryStarters").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-start]"); if (!b) return;
+  const box = $("diaryText");
+  const t = b.dataset.start.replace(/…$/, " ");
+  box.value = box.value.trim() ? `${box.value.replace(/\s*$/, "")}\n${t}` : t;
+  box.focus(); box.selectionStart = box.selectionEnd = box.value.length;
+});
+$("stickers").innerHTML = STICKERS.map((s) => `<button type="button" class="sticker" data-sticker="${s}" aria-label="Add ${s}">${s}</button>`).join("");
+$("stickers").addEventListener("click", (e) => { const b = e.target.closest("[data-sticker]"); if (b) insertAt(b.dataset.sticker); });
+
+function stopEditing() {
+  editing = null;
+  $("diaryText").value = "";
+  $("diarySave").textContent = "Save to my diary";
+  $("diaryCancel").hidden = true;
+  renderDiaryPrompt();
+}
+$("diarySave").addEventListener("click", () => {
+  const text = $("diaryText").value.trim();
+  if (!text) { $("diaryMsg").textContent = "Write something first, even one word is fine."; $("diaryText").focus(); return; }
+  let id;
+  if (editing) {
+    const e = diary.find((x) => x.id === editing);
+    if (e) { e.text = text; e.edited = new Date().toISOString(); }
+    id = editing;
+    $("diaryMsg").textContent = "Your diary page is updated.";
+  } else {
+    id = Date.now();
+    diary.push({ id, d: todayKey(), at: new Date().toISOString(), f: todayFlower()?.f ?? "", text });
+    $("diaryMsg").textContent = "Saved in your diary. 🌸";
+    tone(784, 0, 0.4, 0.06); tone(1047, 0.1, 0.5, 0.05);
+  }
+  if (!saveDiary()) $("diaryMsg").textContent = "This device could not save your diary. It may be out of space.";
+  stopEditing();
+  filter = ""; renderEntries();
+  const li = document.querySelector(`[data-entry="${id}"]`);
+  if (li) { li.classList.add("flash"); setTimeout(() => li.classList.remove("flash"), 1500); }
+});
+$("diaryCancel").addEventListener("click", () => { stopEditing(); $("diaryMsg").textContent = ""; });
+
+function renderEntries() {
+  const used = [...new Set(diary.map((e) => e.f).filter(Boolean))];
+  $("diaryFilter").hidden = used.length < 2;
+  $("diaryFilter").innerHTML = [`<button type="button" class="chip" data-filter="" aria-pressed="${!filter}">All</button>`,
+    ...FEELINGS.filter((f) => used.includes(f.id)).map((f) => `<button type="button" class="chip" style="--c:${col(f.id)}" data-filter="${f.id}" aria-pressed="${filter === f.id}">${f.label}</button>`)].join("");
+  const list = diary.filter((e) => !filter || e.f === filter).sort((a, b) => b.id - a.id);
+  $("diaryDownload").hidden = !diary.length;
+  $("entries").innerHTML = list.length ? list.slice(0, shown).map((e) => {
+    const f = byId[e.f];
+    const when = new Date(e.at);
+    return `<li class="entry" data-entry="${e.id}" style="${f ? `--c:${col(f.id)}` : ""}">
+      <header>${f ? face(f) : ""}<span>${esc(nice(e.d))} · ${esc(when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }))}${f ? ` · felt ${f.label.toLowerCase()}` : ""}</span></header>
+      <p class="text">${esc(e.text)}</p>
+      <div class="acts"><button type="button" data-edit="${e.id}">Edit</button><button type="button" class="del" data-del="${e.id}">Delete</button></div>
+    </li>`;
+  }).join("") : `<li class="diary-empty">${diary.length ? "No pages for this feeling yet." : "Your diary pages will appear here."}</li>`;
+  $("diaryMore").hidden = list.length <= shown;
+}
+$("diaryFilter").addEventListener("click", (e) => { const b = e.target.closest("[data-filter]"); if (!b) return; filter = b.dataset.filter; shown = 10; renderEntries(); });
+$("diaryMore").addEventListener("click", () => { shown += 10; renderEntries(); });
+$("entries").addEventListener("click", (e) => {
+  const ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
+  if (ed) {
+    const entry = diary.find((x) => x.id === +ed.dataset.edit); if (!entry) return;
+    editing = entry.id;
+    $("diaryText").value = entry.text;
+    $("diarySave").textContent = "Save changes";
+    $("diaryCancel").hidden = false;
+    $("diaryMsg").textContent = "";
+    renderDiaryPrompt();
+    $("diary").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    $("diaryText").focus({ preventScroll: true });
+  } else if (del) {
+    // ask once more before deleting: the button changes to "Tap again to delete"
+    if (!del.classList.contains("sure")) {
+      del.classList.add("sure"); del.textContent = "Tap again to delete";
+      setTimeout(() => { if (del.isConnected) { del.classList.remove("sure"); del.textContent = "Delete"; } }, 4000);
+      return;
+    }
+    diary = diary.filter((x) => x.id !== +del.dataset.del);
+    if (editing === +del.dataset.del) stopEditing();
+    saveDiary(); renderEntries();
+    $("diaryMsg").textContent = "That diary page was deleted.";
+  }
+});
+$("diaryDownload").addEventListener("click", () => {
+  const text = "My Feelings Garden diary\n\n" + diary.slice().sort((a, b) => a.id - b.id).map((e) =>
+    `${nice(e.d)}, ${new Date(e.at).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}${byId[e.f] ? ` (felt ${byId[e.f].label.toLowerCase()})` : ""}\n${e.text}\n`).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" }));
+  a.download = `feelings-diary-${todayKey()}.txt`;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+});
+function openDiary() {
+  $("diary").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  $("diaryText").focus({ preventScroll: true });
+}
+function readDay(d) {
+  filter = ""; shown = Math.max(shown, diary.length);
+  renderEntries();
+  const first = [...document.querySelectorAll("[data-entry]")].reverse().find((li) => diary.find((e) => e.id === +li.dataset.entry)?.d === d);
+  if (!first) return;
+  first.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  first.classList.add("flash"); setTimeout(() => first.classList.remove("flash"), 1800);
+}
+
+function renderAll() { renderFeelings(); renderGarden(); renderWeek(); renderGuide(); renderDiaryPrompt(); renderEntries(); }
 $("today").textContent = `Today is ${nice(todayKey())}.`;
 renderAll();
 
