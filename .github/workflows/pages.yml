@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Collect the app files
-        run: mkdir site && cp -r index.html manifest.webmanifest sw.js icons site/ && touch site/.nojekyll
+        run: mkdir site && cp -r index.html garden3d.js manifest.webmanifest sw.js icons vendor site/ && touch site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

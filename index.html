@@ -120,6 +120,14 @@ header .sub { color: var(--muted); }
 /* garden */
 .bed { border-radius: 20px; overflow: hidden; background: linear-gradient(var(--sky) 0 62%, var(--soil) 62% 100%); }
 .bed svg { display: block; width: 100%; height: auto; }
+/* 3D garden: a canvas filling the bed; the flat garden above is the fallback without WebGL */
+.bed.three { position: relative; height: clamp(280px, 52vw, 400px); background: var(--sky); cursor: grab; }
+.bed.three:active { cursor: grabbing; }
+.bed.three canvas { display: block; width: 100%; height: 100%; }
+.bed.three:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+.bed .hint { position: absolute; left: 12px; bottom: 10px; right: 12px; font-size: .9rem; font-weight: 700; color: var(--fg);
+  background: color-mix(in srgb, var(--card) 80%, transparent); border-radius: 999px; padding: 4px 12px; width: fit-content; max-width: calc(100% - 24px); pointer-events: none; }
+.bed .empty3d { position: absolute; inset: auto 12px 50px; text-align: center; font-weight: 700; color: var(--fg); pointer-events: none; }
 .empty { color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: .95rem; color: var(--muted); }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
@@ -170,12 +178,13 @@ header .sub { color: var(--muted); }
   <section class="card" aria-labelledby="gardenTitle">
     <div class="row"><h2 id="gardenTitle">My garden</h2><span class="status" id="status"></span></div>
     <div class="bed" id="bed"></div>
-    <p class="picked" id="picked"></p>
+    <p class="picked" id="picked" aria-live="polite"></p>
     <div class="legend" id="legend"></div>
   </section>
 </div>
 
-<script>
+<script type="module">
+import { createGarden3D } from "./garden3d.js";
 (() => {
 // ---------- feelings ----------
 // mouth: path for the face; reply: what the garden says back; help: an extra gentle line for hard feelings
@@ -341,10 +350,35 @@ function flowerSVG(x, groundY, f, bloom, i, d) {
     ${head}</g>`;
 }
 
+// 3D garden when the device supports it (WebGL), the flat garden otherwise
+let g3d = null;
+try { g3d = createGarden3D($("bed"), { reduceMotion, onPick: (i) => showFlowerAt(i) }); } catch { g3d = null; }
+if (g3d) {
+  const bed = $("bed");
+  bed.classList.add("three");
+  bed.tabIndex = 0;
+  bed.setAttribute("role", "group");
+  bed.insertAdjacentHTML("beforeend", '<p class="hint" id="hint">Drag to turn the garden · tap a flower</p><p class="empty3d" id="empty3d" hidden>Pick a feeling above to plant your first flower</p>');
+  bed.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); g3d.selectNext(1); }
+    if (e.key === "ArrowLeft") { e.preventDefault(); g3d.selectNext(-1); }
+  });
+  const recolor = () => requestAnimationFrame(() => g3d.setColors());
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", recolor);
+  new MutationObserver(recolor).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+}
+
 function renderGarden() {
   const list = garden.flowers.slice(-28);
   const W = 720, H = 220, ground = 150;
-  if (!list.length) {
+  if (g3d) {
+    g3d.update(list);
+    $("empty3d").hidden = list.length > 0;
+    $("bed").setAttribute("aria-label", list.length
+      ? `Your 3D garden, ${list.length} flower${list.length === 1 ? "" : "s"}. Use the left and right arrow keys to hear about each flower.`
+      : "An empty garden bed, ready for your first flower");
+    if (!list.length) $("picked").textContent = "";
+  } else if (!list.length) {
     $("bed").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="An empty garden bed, ready for your first flower">
       <rect x="0" y="${ground - 6}" width="${W}" height="${H}" fill="var(--soil-dark)" opacity=".25"/>
       <path d="M${W / 2} ${ground}v-26" stroke="#4f7d3f" stroke-width="4" stroke-linecap="round"/>
@@ -363,10 +397,11 @@ function renderGarden() {
     ? FEELINGS.filter((f) => counts[f.id]).map((f) => `<span><i style="--c:${col(f.id)}"></i>${f.label} ${counts[f.id]}</span>`).join("") + `<span>· ${garden.flowers.length} day${garden.flowers.length === 1 ? "" : "s"} checked in</span>`
     : "";
 }
-const showFlower = (g) => {
-  const fl = garden.flowers.slice(-28)[+g.dataset.i];
+function showFlowerAt(i) {
+  const fl = garden.flowers.slice(-28)[i];
   if (fl) $("picked").textContent = `${nice(fl.d)}: you felt ${byId[fl.f].label.toLowerCase()}${fl.bloom ? " and your flower bloomed" : ""}.`;
-};
+}
+const showFlower = (g) => showFlowerAt(+g.dataset.i);
 $("bed").addEventListener("click", (e) => { const g = e.target.closest(".flower"); if (g) showFlower(g); });
 $("bed").addEventListener("keydown", (e) => { const g = e.target.closest(".flower"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showFlower(g); } });
 
