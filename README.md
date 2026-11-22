@@ -1,8 +1,8 @@
 # Feelings Garden
 
 A gentle daily check-in app. Pick how you feel, do a calm activity (breathe with the flower or pop bubbles), and a
-flower grows in your garden for each day. Made to be easy for everyone: big buttons, a very readable font, a
-"Read to me" button, no timers, no scores and no ways to fail.
+flower grows in your garden for each day. Made to be easy for everyone: big buttons, a very readable font,
+no timers, no scores and no ways to fail.
 
 ## Install it
 

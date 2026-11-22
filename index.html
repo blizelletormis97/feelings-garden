@@ -91,8 +91,6 @@ header .sub { color: var(--muted); }
 .card { background: var(--card); border-radius: var(--radius); padding: 22px; display: grid; gap: 16px; box-shadow: 0 2px 0 var(--line); }
 .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .row h2 { flex: 1; min-width: 0; }
-.speak { border: 0; background: var(--sky); border-radius: 999px; padding: 10px 16px; font-weight: 700; display: inline-flex; gap: 8px; align-items: center; min-height: 48px; }
-.speak svg { width: 22px; height: 22px; }
 
 .feelings { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
 .feeling { border: 3px solid transparent; border-radius: 20px; background: color-mix(in srgb, var(--c) 45%, var(--card)); padding: 14px 8px 12px;
@@ -185,7 +183,6 @@ header .sub { color: var(--muted); }
   <section class="card" aria-labelledby="askTitle">
     <div class="row">
       <h2 id="askTitle">How are you feeling today?</h2>
-      <button class="speak" id="readAloud" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>Read to me</button>
     </div>
     <div class="feelings" id="feelings" role="group" aria-label="Feelings"></div>
     <div id="step" aria-live="polite"></div>
@@ -249,15 +246,6 @@ $("status").textContent = "Saved on this device";
 // Ask the browser to keep the garden even when the phone is low on space
 try { navigator.storage?.persist?.(); } catch {}
 
-// ---------- read aloud ----------
-let speakFn = null;
-if ("speechSynthesis" in window) {
-  speakFn = (text) => { try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 0.9; speechSynthesis.speak(u); } catch {} };
-  $("readAloud").hidden = false;
-}
-let lastSpoken = "How are you feeling today? Pick the face that matches how you feel.";
-$("readAloud").addEventListener("click", () => speakFn?.(lastSpoken));
-
 // ---------- check-in ----------
 let current = null;
 function renderFeelings() {
@@ -277,7 +265,6 @@ function pick(f) {
   garden.flowers.sort((a, b) => a.d.localeCompare(b.d));
   save();
   renderFeelings(); renderGarden();
-  lastSpoken = `${f.reply} ${f.help ?? ""} Let's do a calm activity to help your flower bloom.`;
   $("step").innerHTML = `<div class="reply" style="--c:${col(f.id)}">
       <p class="big">${f.reply}</p>
       ${f.help ? `<p class="help">${f.help}</p>` : ""}
@@ -302,7 +289,6 @@ function breathe() {
     <p class="breath-text" id="breathText">Get ready…</p>
     <p class="count" id="breathCount">3 slow breaths</p>
   </div>`;
-  lastSpoken = "Breathe with the flower. Breathe in while it grows, and breathe out while it gets small.";
   let i = 0;
   const el = $("breath"), txt = $("breathText"), cnt = $("breathCount");
   const step = () => {
@@ -325,7 +311,6 @@ function bubbles() {
     <div class="bubbles" id="bubbles" role="group" aria-label="Bubbles"></div>
     <p class="count" id="bubbleCount">${n} bubbles left</p>
   </div>`;
-  lastSpoken = "Pop all the bubbles. Take your time.";
   const box = $("bubbles");
   const w = box.clientWidth, h = box.clientHeight;
   let left = n;
@@ -349,7 +334,6 @@ function done(msg) {
   const today = garden.flowers.find((x) => x.d === todayKey());
   if (today) today.bloom = true;
   save(); renderGarden();
-  lastSpoken = `${msg} Your flower bloomed. Come back tomorrow to plant another one.`;
   $("step").innerHTML = `<div class="reply" style="--c:${col(current.id)}">
     <p class="big">${msg} Your flower bloomed.</p>
     <p>Come back tomorrow to plant another one.</p>
