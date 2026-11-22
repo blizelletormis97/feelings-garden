@@ -27,7 +27,7 @@ A single page with no build step:
 | File | What it is |
 |---|---|
 | `index.html` | The app (HTML, CSS and JavaScript) |
-| `garden3d.js` | The 3D garden, drawn with [three.js](https://threejs.org); devices without WebGL get the flat garden |
+| `garden3d.js` | The 3D garden, drawn with [three.js](https://threejs.org): flowers, butterflies, a hiding ladybug, a watering cloud, and a sun or moon-and-stars sky that follows the bright or dark theme. Devices without WebGL get the flat garden |
 | `vendor/` | three.js r160 (MIT license, see `vendor/three-LICENSE.txt`), kept here so the app works offline |
 | `manifest.webmanifest` | App name, colors and icons for installing |
 | `sw.js` | Service worker that keeps the app working offline; bump `VERSION` after changing files |
