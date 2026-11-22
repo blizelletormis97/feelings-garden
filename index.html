@@ -139,7 +139,7 @@ header .sub { color: var(--muted); }
 .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .tools .btn { display: inline-flex; align-items: center; gap: 8px; }
 .tools .btn svg { width: 24px; height: 24px; }
-.tools .btn:disabled { opacity: .6; cursor: default; }
+.btn:disabled { opacity: .55; cursor: default; }
 .friends { color: var(--muted); font-size: .95rem; font-weight: 700; }
 .empty { color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: .95rem; color: var(--muted); }
@@ -222,11 +222,60 @@ header .sub { color: var(--muted); }
 .diary-empty { color: var(--muted); }
 #diaryText:focus-visible, .sticker:focus-visible, .chip:focus-visible, .entry .acts button:focus-visible, .linkbtn:focus-visible { outline: 4px solid var(--focus); outline-offset: 2px; }
 
+/* Premium */
+.badge { font-size: .8rem; font-weight: 800; border-radius: 999px; padding: 3px 10px; background: color-mix(in srgb, var(--happy) 70%, var(--card)); color: #3d3410; white-space: nowrap; }
+.lock { font-size: .85em; margin-left: 4px; }
+.themes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.themes .label { font-weight: 700; color: var(--muted); font-size: .95rem; margin-right: 2px; }
+.who { border: 2px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; font-weight: 700; min-height: 44px; }
+.perks { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.plans { display: flex; gap: 10px; flex-wrap: wrap; }
+.plan { flex: 1 1 140px; border: 2px solid var(--line); border-radius: 18px; padding: 12px 14px; background: var(--card); text-align: left; display: grid; gap: 2px; }
+.plan[aria-checked="true"] { border-color: var(--fg); background: color-mix(in srgb, var(--happy) 30%, var(--card)); }
+.plan .price { font-family: var(--display); font-size: 1.5rem; font-weight: 800; }
+.plan small { color: var(--muted); font-weight: 700; }
+.note { color: var(--muted); font-size: .95rem; }
+.preview-on { border-radius: 14px; padding: 10px 14px; background: color-mix(in srgb, var(--happy) 35%, var(--card)); font-weight: 700; }
+.flash-card { outline: 4px solid var(--focus); outline-offset: 3px; }
+.locked-box { border-radius: 18px; padding: 16px 18px; background: color-mix(in srgb, var(--tired) 25%, var(--card)); display: grid; gap: 10px; justify-items: start; }
+/* report */
+.monthnav { display: flex; align-items: center; gap: 8px; }
+.monthnav button { border: 2px solid var(--line); background: var(--card); border-radius: 999px; min-width: 48px; min-height: 48px; font-weight: 800; }
+.monthnav button:disabled { opacity: .4; }
+.monthnav strong { font-family: var(--display); font-size: 1.2rem; flex: 1; text-align: center; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.stat { border-radius: 16px; padding: 10px 12px; background: var(--sky); }
+.stat b { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1.1; }
+.bars { display: grid; gap: 8px; }
+.barrow { display: grid; grid-template-columns: 5.5em 1fr 2em; gap: 8px; align-items: center; font-weight: 700; }
+.barrow .track { height: 18px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.barrow .track i { display: block; height: 100%; border-radius: inherit; background: var(--c); }
+.patterns { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+/* family */
+.kids { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.kid { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-radius: 16px; padding: 10px 12px; background: var(--sky); }
+.kid .em { font-size: 1.8rem; }
+.kid .nm { flex: 1; font-weight: 800; min-width: 6em; }
+.kid .nm small { display: block; font-weight: 700; color: var(--muted); }
+.emojis { display: flex; gap: 6px; flex-wrap: wrap; }
+.addkid { display: grid; gap: 10px; }
+/* shake it out */
+.shaker { border: 0; background: transparent; padding: 0; width: 170px; height: 170px; }
+.shaker svg { width: 100%; height: 100%; }
+.shaker.go svg { animation: shake .45s ease; }
+@keyframes shake { 20% { transform: rotate(-12deg) scale(1.05); } 45% { transform: rotate(10deg); } 70% { transform: rotate(-6deg); } }
+@media print {
+  body.print-report { background: #fff; color: #000; padding: 0; }
+  body.print-report .wrap > *:not(#report) { display: none !important; }
+  body.print-report .noprint { display: none !important; }
+  body.print-report .card { box-shadow: none; border: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .feeling, .breath .petal-ring { transition: none; }
   .bubble { animation: none; }
   .bubble.popped { animation: none; opacity: 0; }
-  .ball, .ball.squeeze, .lid, .wnote, .kindcard { transition: none; animation: none; }
+  .ball, .ball.squeeze, .lid, .wnote, .kindcard, .shaker.go svg { transition: none; animation: none; }
 }
 /* install tip */
 .install { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--calm) 35%, var(--card)); }
@@ -243,6 +292,7 @@ header .sub { color: var(--muted); }
       <h1>Feelings Garden</h1>
       <p class="sub">Check in each day. Every feeling plants a flower. <span class="date" id="today"></span></p>
     </div>
+    <button type="button" class="who" id="whoBtn" hidden></button>
     <button type="button" class="theme" id="themeBtn"></button>
   </header>
 
@@ -268,6 +318,7 @@ header .sub { color: var(--muted); }
       <button type="button" class="btn" id="waterBtn"><svg viewBox="0 0 24 24" fill="#aedcf3" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></svg>Water the garden</button>
       <button type="button" class="btn soft" id="soundBtn"></button>
     </div>
+    <div class="themes" id="themes" role="group" aria-label="Garden theme" hidden></div>
     <p class="friends" id="friends" hidden></p>
     <div class="legend" id="legend"></div>
   </section>
@@ -294,11 +345,49 @@ header .sub { color: var(--muted); }
     <p class="weeknote" id="weekNote"></p>
   </section>
 
+  <section class="card" aria-labelledby="reportTitle" id="report">
+    <div class="row"><h2 id="reportTitle">Feelings report</h2><span class="badge noprint">⭐ Premium</span></div>
+    <div id="reportBody" style="display:grid;gap:14px"></div>
+  </section>
+
   <section class="card" aria-labelledby="guideTitle">
     <h2 id="guideTitle">Learn about feelings</h2>
     <p class="weeknote">Tap a face to learn about that feeling.</p>
     <div class="guidefaces" id="guideFaces" role="group" aria-label="Feelings to learn about"></div>
     <div id="guide" aria-live="polite"></div>
+  </section>
+
+  <section class="card" aria-labelledby="premiumTitle" id="premium">
+    <div class="row"><h2 id="premiumTitle">⭐ Feelings Garden Premium</h2><span class="badge">For grown-ups</span></div>
+    <p class="weeknote">The daily check-in, the garden, the diary and the calm activities always stay free. Premium adds:</p>
+    <ul class="perks">
+      <li><b>Garden themes</b>: beach, snow and space, plus a bonus sticker pack and the "Shake it out" activity</li>
+      <li><b>Feelings report</b>: monthly charts and patterns, ready to print for a parent, teacher or therapist</li>
+      <li><b>Backup</b>: save and restore a backup file (cloud sync across devices is coming)</li>
+      <li><b>Family</b>: a separate garden, diary and friends for each child</li>
+    </ul>
+    <div class="plans" role="radiogroup" aria-label="Plan" id="plans">
+      <button type="button" class="plan" role="radio" aria-checked="false" data-plan="month"><small>Monthly</small><span class="price">$2.99</span><small>per month</small></button>
+      <button type="button" class="plan" role="radio" aria-checked="true" data-plan="year"><small>Yearly · save 30%</small><span class="price">$24.99</span><small>per year (about $2.08 a month)</small></button>
+    </div>
+    <button type="button" class="btn" disabled>Subscribe · coming soon</button>
+    <p class="note">Subscriptions are not open yet, and no payment is taken here. Until then you can try every Premium feature for free with the preview.</p>
+    <p class="preview-on" id="previewOn" hidden>✨ Premium preview is on, on this device. Nothing was charged.</p>
+    <button type="button" class="btn soft" id="previewBtn"></button>
+  </section>
+
+  <section class="card" aria-labelledby="familyTitle" id="family">
+    <div class="row"><h2 id="familyTitle">Family</h2><span class="badge">⭐ Premium</span></div>
+    <p class="weeknote">Each child gets their own garden, diary and garden friends on this device.</p>
+    <ul class="kids" id="kids"></ul>
+    <div id="addKid"></div>
+  </section>
+
+  <section class="card" aria-labelledby="backupTitle" id="backup">
+    <div class="row"><h2 id="backupTitle">Backup</h2><span class="badge">⭐ Premium</span></div>
+    <p class="weeknote">Everything is kept only on this device. A backup file keeps gardens, diaries and settings for every child safe if the phone is lost or its data is cleared.</p>
+    <div id="backupBody" style="display:grid;gap:10px;justify-items:start"></div>
+    <p class="note">☁️ Cloud backup and sync across devices: coming soon.</p>
   </section>
 </div>
 
@@ -338,8 +427,22 @@ const nice = (d) => new Date(`${d}T12:00:00`).toLocaleDateString(undefined, { we
 const $ = (id) => document.getElementById(id);
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// ---------- children (Premium: Family) and the Premium preview ----------
+// Each child's garden, diary and friends are stored under their own keys; the first child keeps the original keys.
+const PROFILES = "feelingsGarden.profiles", ACTIVE = "feelingsGarden.activeProfile", PREMIUM = "feelingsGarden.premiumPreview";
+const readJSON = (k, fallback) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? fallback; } catch { return fallback; } };
+const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };
+let profiles = readJSON(PROFILES, null);
+if (!Array.isArray(profiles) || !profiles.length) profiles = [{ id: "", name: "", emoji: "🌼" }];
+let activeId = "";
+try { activeId = localStorage.getItem(ACTIVE) || ""; } catch {}
+if (!profiles.some((x) => x.id === activeId)) activeId = "";
+const pkey = (k) => (activeId ? `${k}:${activeId}` : k);
+let premium = false;
+try { premium = localStorage.getItem(PREMIUM) === "on"; } catch {}
+
 // Saving: the garden stays on this device (nothing is sent anywhere)
-const LOCAL = "feelingsGarden.v1";
+const LOCAL = pkey("feelingsGarden.v1");
 function save() { try { localStorage.setItem(LOCAL, JSON.stringify(garden)); } catch {} }
 function loadLocal() { try { const g = JSON.parse(localStorage.getItem(LOCAL) || "null"); if (g && Array.isArray(g.flowers)) garden = g; } catch {} }
 loadLocal();
@@ -398,7 +501,7 @@ function showReply() {
       <p class="big">${f.reply}</p>
       ${f.help ? `<p class="help">${f.help}</p>` : ""}
       <p>${/^[aeiou]/i.test(f.label) ? "An" : "A"} ${f.label.toLowerCase()} flower is planted. Do a calm activity to help it bloom:</p>
-      <div class="choices">${acts.map((a, k) => `<button type="button" class="btn${k ? " soft" : ""}" data-act="${a}">${ACT_NAMES[a]}</button>`).join("")}</div>
+      <div class="choices">${acts.map((a, k) => `<button type="button" class="btn${k ? " soft" : ""}" data-act="${a}">${ACT_NAMES[a]}</button>`).join("")}<button type="button" class="btn soft" data-act="shake">Shake it out${premium ? "" : '<span class="lock" aria-label="Premium">🔒</span>'}</button></div>
     </div>`;
   $("step").querySelector("button")?.focus({ preventScroll: true });
 }
@@ -411,6 +514,7 @@ $("step").addEventListener("click", (e) => {
   else if (act === "about") { if (today && b.dataset.v) { today.why = b.dataset.v; save(); } showReply(); }
   else if (act === "again") { $("step").innerHTML = ""; current = null; }
   else if (act === "write") { $("step").innerHTML = ""; current = null; openDiary(); }
+  else if (act === "shake" && !premium) showPremium();
   else if (ACTIVITIES[act]) ACTIVITIES[act]();
 });
 
@@ -610,7 +714,28 @@ function notice() {
   show();
 }
 
-const ACTIVITIES = { breathe, bubbles, squeeze, jar, kind, stretch, thankful, notice };
+// Premium: shake it out (shake your body, tap the flower each time)
+function shake() {
+  const goal = 10;
+  let n = 0;
+  $("step").innerHTML = `<div class="activity" style="--c:${col(current.id)}">
+    <p class="breath-text">Shake it out!</p>
+    <p class="help">Shake your hands, arms and legs. Tap the flower every time you shake.</p>
+    <button type="button" class="shaker" id="shaker" aria-label="Tap each time you shake">${face(current)}</button>
+    <p class="count" id="shakeCount">${goal} shakes to go</p>
+  </div>`;
+  const b = $("shaker");
+  b.addEventListener("click", () => {
+    n++;
+    b.classList.remove("go"); void b.offsetWidth; b.classList.add("go");
+    tone(440 + n * 40, 0, 0.15, 0.06, "triangle");
+    $("shakeCount").textContent = n < goal ? `${goal - n} shake${goal - n === 1 ? "" : "s"} to go` : "All shaken out!";
+    if (n === goal) setTimeout(() => done("You shook out the wiggles!"), 600);
+  });
+  b.focus({ preventScroll: true });
+}
+
+const ACTIVITIES = { breathe, bubbles, squeeze, jar, kind, stretch, thankful, notice, shake };
 
 function done(msg) {
   const today = garden.flowers.find((x) => x.d === todayKey());
@@ -700,7 +825,8 @@ showSoundButton();
 
 // ---------- garden friends you found (kept on this device) ----------
 let friends = { butterfly: 0, ladybug: 0 };
-try { friends = { ...friends, ...JSON.parse(localStorage.getItem("feelingsGarden.friends") || "{}") }; } catch {}
+const FRIENDS = pkey("feelingsGarden.friends");
+try { friends = { ...friends, ...JSON.parse(localStorage.getItem(FRIENDS) || "{}") }; } catch {}
 function showFriends() {
   const b = friends.butterfly, l = friends.ladybug;
   $("friends").hidden = !(b || l);
@@ -708,7 +834,7 @@ function showFriends() {
 }
 function foundFriend(kind) {
   friends[kind]++;
-  try { localStorage.setItem("feelingsGarden.friends", JSON.stringify(friends)); } catch {}
+  try { localStorage.setItem(FRIENDS, JSON.stringify(friends)); } catch {}
   showFriends();
   sounds[kind]();
   $("picked").textContent = kind === "butterfly"
@@ -852,7 +978,7 @@ $("guideFaces").addEventListener("click", (e) => {
 
 // ---------- diary (kept only on this device) ----------
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const DIARY = "feelingsGarden.diary";
+const DIARY = pkey("feelingsGarden.diary");
 let diary = []; // [{ id, d: "YYYY-MM-DD", at: ISO time, f: feeling id or "", text }]
 try { const x = JSON.parse(localStorage.getItem(DIARY) || "[]"); if (Array.isArray(x)) diary = x; } catch {}
 const saveDiary = () => { try { localStorage.setItem(DIARY, JSON.stringify(diary)); return true; } catch { return false; } };
@@ -889,8 +1015,17 @@ $("diaryStarters").addEventListener("click", (e) => {
   box.value = box.value.trim() ? `${box.value.replace(/\s*$/, "")}\n${t}` : t;
   box.focus(); box.selectionStart = box.selectionEnd = box.value.length;
 });
-$("stickers").innerHTML = STICKERS.map((s) => `<button type="button" class="sticker" data-sticker="${s}" aria-label="Add ${s}">${s}</button>`).join("");
-$("stickers").addEventListener("click", (e) => { const b = e.target.closest("[data-sticker]"); if (b) insertAt(b.dataset.sticker); });
+const BONUS_STICKERS = ["🦄", "🐬", "🍦", "🎈", "🪐", "❄️", "🐚", "🌟"]; // Premium sticker pack
+function renderStickers() {
+  $("stickers").innerHTML = STICKERS.map((s) => `<button type="button" class="sticker" data-sticker="${s}" aria-label="Add ${s}">${s}</button>`).join("")
+    + BONUS_STICKERS.map((s) => premium
+      ? `<button type="button" class="sticker" data-sticker="${s}" aria-label="Add ${s}">${s}</button>`
+      : `<button type="button" class="sticker" data-locked="1" aria-label="${s}, Premium sticker" style="opacity:.55">${s}</button>`).join("");
+}
+$("stickers").addEventListener("click", (e) => {
+  if (e.target.closest("[data-locked]")) return showPremium();
+  const b = e.target.closest("[data-sticker]"); if (b) insertAt(b.dataset.sticker);
+});
 
 function stopEditing() {
   editing = null;
@@ -989,8 +1124,232 @@ function readDay(d) {
   first.classList.add("flash"); setTimeout(() => first.classList.remove("flash"), 1800);
 }
 
-function renderAll() { renderFeelings(); renderGarden(); renderWeek(); renderGuide(); renderDiaryPrompt(); renderEntries(); }
+// ---------- Premium (preview only: subscriptions are not open yet) ----------
+function showPremium() {
+  const sec = $("premium");
+  sec.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  sec.classList.add("flash-card"); setTimeout(() => sec.classList.remove("flash-card"), 1800);
+}
+function renderPremium() {
+  $("previewOn").hidden = !premium;
+  $("previewBtn").textContent = premium ? "Turn off the Premium preview" : "Try the Premium preview (free)";
+}
+$("previewBtn").addEventListener("click", () => {
+  premium = !premium;
+  try { localStorage.setItem(PREMIUM, premium ? "on" : "off"); } catch {}
+  if (!premium) applyTheme("meadow", false);
+  else applyTheme(savedTheme(), false);
+  renderAll();
+  if (premium) tone(659, 0, 0.4, 0.07), tone(988, 0.12, 0.6, 0.06);
+});
+$("plans").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-plan]"); if (!b) return;
+  $("plans").querySelectorAll("[data-plan]").forEach((x) => x.setAttribute("aria-checked", String(x === b)));
+});
+
+// ---------- garden themes ----------
+const THEME_KEY = pkey("feelingsGarden.gardenTheme");
+const GARDEN_THEMES = [["meadow", "🌼 Meadow"], ["beach", "🏖️ Beach"], ["snow", "❄️ Snow"], ["space", "🪐 Space"]];
+const savedTheme = () => { try { return localStorage.getItem(THEME_KEY) || "meadow"; } catch { return "meadow"; } };
+let gardenTheme = "meadow";
+function applyTheme(name, remember = true) {
+  gardenTheme = name;
+  if (remember) try { localStorage.setItem(THEME_KEY, name); } catch {}
+  g3d?.setTheme(name);
+}
+function renderThemes() {
+  $("themes").hidden = !g3d;
+  $("themes").innerHTML = `<span class="label">Garden theme:</span>` + GARDEN_THEMES.map(([id, label]) => {
+    const locked = id !== "meadow" && !premium;
+    return `<button type="button" class="chip" data-gtheme="${id}" aria-pressed="${gardenTheme === id}">${label}${locked ? '<span class="lock" aria-label="Premium">🔒</span>' : ""}</button>`;
+  }).join("");
+}
+$("themes").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-gtheme]"); if (!b) return;
+  if (b.dataset.gtheme !== "meadow" && !premium) return showPremium();
+  applyTheme(b.dataset.gtheme);
+  renderThemes();
+});
+
+// ---------- feelings report ----------
+let reportMonth = todayKey().slice(0, 7); // "YYYY-MM"
+const monthName = (m) => new Date(`${m}-15T12:00:00`).toLocaleDateString(undefined, { month: "long", year: "numeric" });
+const shiftMonth = (m, d) => { const [y, mo] = m.split("-").map(Number); const t = new Date(y, mo - 1 + d, 1); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}`; };
+const childName = () => profiles.find((x) => x.id === activeId)?.name || "";
+function renderReport() {
+  if (!premium) {
+    $("reportBody").innerHTML = `<div class="locked-box">
+      <p>See each month's feelings at a glance: which feelings came most, what they were about, which days were hardest, and a report to print for a parent, teacher or therapist.</p>
+      <button type="button" class="btn soft" data-premium>🔒 See Premium</button></div>`;
+    return;
+  }
+  const m = reportMonth;
+  const list = garden.flowers.filter((x) => x.d.startsWith(m));
+  const [y, mo] = m.split("-").map(Number);
+  const isNow = m === todayKey().slice(0, 7);
+  const daysIn = isNow ? new Date().getDate() : new Date(y, mo, 0).getDate();
+  const counts = {}; list.forEach((x) => { counts[x.f] = (counts[x.f] || 0) + 1; });
+  const max = Math.max(1, ...Object.values(counts));
+  const pages = diary.filter((e) => e.d.startsWith(m)).length;
+  const patterns = [];
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  if (top && list.length > 1) patterns.push(`Felt <b>${byId[top[0]].label.toLowerCase()}</b> most often (${top[1]} day${top[1] === 1 ? "" : "s"}).`);
+  for (const f of FEELINGS) {
+    const whys = {}; list.filter((x) => x.f === f.id && x.why).forEach((x) => { whys[x.why] = (whys[x.why] || 0) + 1; });
+    const w = Object.entries(whys).sort((a, b) => b[1] - a[1])[0];
+    if (w && w[1] >= 2) patterns.push(`${f.label} most often about <b>${esc(w[0].toLowerCase())}</b> (${w[1]} times).`);
+  }
+  const big = list.filter((x) => x.size === 3).length;
+  if (big) patterns.push(`${big} day${big === 1 ? "" : "s"} with a very big feeling.`);
+  const hardByDay = {};
+  list.filter((x) => HARD.includes(x.f)).forEach((x) => { const wd = new Date(`${x.d}T12:00:00`).toLocaleDateString(undefined, { weekday: "long" }); hardByDay[wd] = (hardByDay[wd] || 0) + 1; });
+  const hd = Object.entries(hardByDay).sort((a, b) => b[1] - a[1])[0];
+  if (hd && hd[1] >= 2) patterns.push(`Sad, worried or angry feelings came most often on <b>${hd[0]}s</b>.`);
+  const hard = list.filter((x) => HARD.includes(x.f)).length;
+  if (list.length >= 4 && hard / list.length >= 0.5) patterns.push("More than half of the check-ins were hard feelings. It may help to talk together, or with a teacher, counselor or doctor.");
+  const earliest = garden.flowers[0]?.d.slice(0, 7) ?? m;
+  $("reportBody").innerHTML = `
+    <div class="monthnav noprint"><button type="button" data-month="-1" aria-label="Previous month" ${m <= earliest ? "disabled" : ""}>‹</button><strong>${monthName(m)}</strong><button type="button" data-month="1" aria-label="Next month" ${isNow ? "disabled" : ""}>›</button></div>
+    <p style="font-weight:700">${childName() ? `${esc(childName())}'s feelings` : "Feelings"} in ${monthName(m)}</p>
+    ${list.length ? `
+    <div class="stats">
+      <div class="stat"><b>${list.length}</b>day${list.length === 1 ? "" : "s"} checked in (of ${daysIn})</div>
+      <div class="stat"><b>${list.filter((x) => x.bloom).length}</b>calm activit${list.filter((x) => x.bloom).length === 1 ? "y" : "ies"} done</div>
+      <div class="stat"><b>${pages}</b>diary page${pages === 1 ? "" : "s"}</div>
+    </div>
+    <div class="bars" role="list" aria-label="Feelings this month">${FEELINGS.filter((f) => counts[f.id]).map((f) => `<div class="barrow" role="listitem" style="--c:${col(f.id)}"><span>${f.label}</span><span class="track"><i style="width:${(counts[f.id] / max) * 100}%"></i></span><span>${counts[f.id]}</span></div>`).join("")}</div>
+    ${patterns.length ? `<div><b>Patterns</b><ul class="patterns">${patterns.map((x) => `<li>${x}</li>`).join("")}</ul></div>` : ""}
+    <p class="note">Diary words stay private and are not part of the report.</p>
+    <div class="noprint"><button type="button" class="btn soft" id="printReport">Print this report</button></div>` : `<p class="weeknote">No check-ins in ${monthName(m)}.</p>`}`;
+}
+$("reportBody").addEventListener("click", (e) => {
+  if (e.target.closest("[data-premium]")) return showPremium();
+  const nav = e.target.closest("[data-month]");
+  if (nav) { reportMonth = shiftMonth(reportMonth, +nav.dataset.month); renderReport(); return; }
+  if (e.target.closest("#printReport")) {
+    document.body.classList.add("print-report");
+    setTimeout(() => { print(); document.body.classList.remove("print-report"); }, 50);
+  }
+});
+
+// ---------- family: a garden for each child ----------
+const KID_EMOJI = ["🌼", "🌷", "🌻", "🌸", "🪻", "🍀", "🌵", "🍄"];
+const kidName = (k) => k.name || (profiles.length > 1 ? "First child" : "This garden");
+let renaming = null, newEmoji = KID_EMOJI[1];
+function renderWho() {
+  const me = profiles.find((x) => x.id === activeId);
+  $("whoBtn").hidden = profiles.length < 2;
+  $("whoBtn").textContent = `${me.emoji} ${kidName(me)}`;
+  $("whoBtn").setAttribute("aria-label", `${kidName(me)}'s garden. Switch child`);
+}
+$("whoBtn").addEventListener("click", () => $("family").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }));
+function renderFamily() {
+  $("kids").innerHTML = profiles.map((k) => `<li class="kid">
+      <span class="em" aria-hidden="true">${k.emoji}</span>
+      ${renaming === k.id
+        ? `<input class="field" id="renameField" maxlength="20" value="${esc(k.name)}" aria-label="Name" style="flex:1;min-width:8em"><button type="button" class="btn" data-save-name="${k.id}">Save</button>`
+        : `<span class="nm">${esc(kidName(k))}${k.id === activeId ? "<small>Using now</small>" : ""}</span>
+           ${k.id !== activeId ? `<button type="button" class="btn" data-switch="${k.id}">Switch</button>` : ""}
+           <button type="button" class="linkbtn" data-rename="${k.id}">Rename</button>
+           ${k.id && k.id !== activeId ? `<button type="button" class="linkbtn" data-remove="${k.id}">Remove</button>` : ""}`}
+    </li>`).join("");
+  $("addKid").innerHTML = premium ? `<div class="addkid">
+      <label for="kidName" style="font-weight:700">Add a child</label>
+      <input class="field" id="kidName" maxlength="20" placeholder="Name" autocomplete="off">
+      <div class="emojis" role="group" aria-label="Pick a flower">${KID_EMOJI.map((em) => `<button type="button" class="sticker" data-kid-emoji="${em}" aria-pressed="${em === newEmoji}" style="${em === newEmoji ? "outline:3px solid var(--fg)" : ""}">${em}</button>`).join("")}</div>
+      <div><button type="button" class="btn" id="addKidBtn">Add child</button></div>
+      <p class="count" id="kidMsg" aria-live="polite"></p>
+    </div>` : `<div class="locked-box"><p>Add a garden for each child, with their own diary and garden friends.</p><button type="button" class="btn soft" data-premium>🔒 See Premium</button></div>`;
+  if (renaming !== null) $("renameField")?.focus();
+}
+function removeKidData(id) {
+  ["feelingsGarden.v1", "feelingsGarden.diary", "feelingsGarden.friends", "feelingsGarden.gardenTheme"].forEach((k) => { try { localStorage.removeItem(`${k}:${id}`); } catch {} });
+}
+function switchTo(id) {
+  try { localStorage.setItem(ACTIVE, id); } catch {}
+  location.reload();
+}
+$("family").addEventListener("click", (e) => {
+  const t = e.target;
+  if (t.closest("[data-premium]")) return showPremium();
+  const sw = t.closest("[data-switch]"); if (sw) return switchTo(sw.dataset.switch);
+  const rn = t.closest("[data-rename]"); if (rn) { renaming = rn.dataset.rename; return renderFamily(); }
+  const sv = t.closest("[data-save-name]");
+  if (sv) {
+    const k = profiles.find((x) => x.id === sv.dataset.saveName);
+    if (k) k.name = $("renameField").value.trim().slice(0, 20);
+    renaming = null; writeJSON(PROFILES, profiles); renderFamily(); renderWho(); renderReport();
+    return;
+  }
+  const rm = t.closest("[data-remove]");
+  if (rm) {
+    if (!rm.classList.contains("sure")) {
+      rm.classList.add("sure"); rm.style.color = "#b23b45";
+      rm.textContent = "Tap again: this deletes their garden and diary";
+      setTimeout(() => { if (rm.isConnected) { rm.classList.remove("sure"); rm.style.color = ""; rm.textContent = "Remove"; } }, 5000);
+      return;
+    }
+    removeKidData(rm.dataset.remove);
+    profiles = profiles.filter((x) => x.id !== rm.dataset.remove);
+    writeJSON(PROFILES, profiles); renderFamily(); renderWho();
+    return;
+  }
+  const em = t.closest("[data-kid-emoji]"); if (em) { newEmoji = em.dataset.kidEmoji; const name = $("kidName").value; renderFamily(); $("kidName").value = name; return; }
+  if (t.closest("#addKidBtn")) {
+    const name = $("kidName").value.trim().slice(0, 20);
+    if (!name) { $("kidMsg").textContent = "Type a name first."; $("kidName").focus(); return; }
+    profiles.push({ id: `k${Date.now().toString(36)}`, name, emoji: newEmoji });
+    writeJSON(PROFILES, profiles);
+    renderFamily(); renderWho();
+    $("kidMsg").textContent = `${name}'s garden is ready. Tap Switch to open it.`;
+  }
+});
+$("family").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.id === "renameField") e.target.closest("li").querySelector("[data-save-name]").click(); });
+
+// ---------- backup file ----------
+let restoreData = null;
+function renderBackup() {
+  $("backupBody").innerHTML = premium ? `
+    <button type="button" class="btn" id="backupSave">Save a backup file</button>
+    <label class="btn soft" style="display:inline-flex;align-items:center;cursor:pointer">Restore from a backup file<input type="file" id="backupFile" accept="application/json,.json" style="position:absolute;opacity:0;width:1px;height:1px"></label>
+    <p class="count" id="backupMsg" aria-live="polite"></p>` : `<div class="locked-box"><p>Save everything to a file, and bring it back on this or another device.</p><button type="button" class="btn soft" data-premium>🔒 See Premium</button></div>`;
+}
+$("backup").addEventListener("click", (e) => {
+  if (e.target.closest("[data-premium]")) return showPremium();
+  if (e.target.closest("#backupSave")) {
+    const data = {};
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith("feelingsGarden.") && k !== PREMIUM && k !== ACTIVE) data[k] = localStorage.getItem(k); }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: "feelings-garden", version: 1, saved: new Date().toISOString(), data }, null, 1)], { type: "application/json" }));
+    a.download = `feelings-garden-backup-${todayKey()}.json`;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    $("backupMsg").textContent = "Backup file saved. Keep it somewhere safe, like Files or iCloud Drive.";
+  }
+  if (e.target.closest("#restoreGo") && restoreData) {
+    Object.keys(localStorage).filter((k) => k.startsWith("feelingsGarden.") && k !== PREMIUM).forEach((k) => localStorage.removeItem(k)); // ACTIVE goes too
+    try {
+      Object.entries(restoreData).forEach(([k, v]) => { if (k.startsWith("feelingsGarden.") && k !== PREMIUM && k !== ACTIVE && typeof v === "string") localStorage.setItem(k, v); });
+    } catch { $("backupMsg").textContent = "This device ran out of space while restoring."; return; }
+    location.reload(); // opens the first child's garden
+  }
+});
+$("backup").addEventListener("change", async (e) => {
+  if (e.target.id !== "backupFile" || !e.target.files[0]) return;
+  try {
+    const j = JSON.parse(await e.target.files[0].text());
+    if (j?.app !== "feelings-garden" || typeof j.data !== "object") throw new Error("not ours");
+    restoreData = j.data;
+    $("backupMsg").innerHTML = `Backup from ${esc(new Date(j.saved).toLocaleDateString())}. Restoring replaces everything in Feelings Garden on this device. <button type="button" class="btn" id="restoreGo" style="margin-top:8px">Restore now</button>`;
+  } catch {
+    $("backupMsg").textContent = "That file is not a Feelings Garden backup.";
+  }
+  e.target.value = "";
+});
+
+function renderAll() { renderFeelings(); renderGarden(); renderWeek(); renderGuide(); renderDiaryPrompt(); renderEntries(); renderStickers(); renderThemes(); renderReport(); renderPremium(); renderFamily(); renderBackup(); renderWho(); }
 $("today").textContent = `Today is ${nice(todayKey())}.`;
+if (premium) applyTheme(savedTheme(), false);
 renderAll();
 
 // ---------- install as an app ----------

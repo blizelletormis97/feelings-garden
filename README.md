@@ -17,7 +17,21 @@ seven days, and "Learn about feelings" explains what each feeling can feel like 
 
 "My diary" has writing prompts that match the day's feeling, tap-to-start sentences and stickers. Pages can be
 filtered by feeling, edited, deleted, and downloaded as a text file. Like the garden, the diary is kept only on the
-device (browser storage) and is never sent anywhere. Made to be easy for everyone: big buttons, a very readable font,
+device (browser storage) and is never sent anywhere.
+
+## Premium (preview)
+
+A "Feelings Garden Premium" section for grown-ups describes a planned subscription ($2.99 a month or $24.99 a year).
+**Subscriptions are not open yet and no payment is taken**: the Subscribe button is disabled, and a free "Premium
+preview" switch (saved on the device) unlocks the Premium features so they can be tried:
+
+- Garden themes (beach, snow with falling snow, space), a bonus sticker pack and the "Shake it out" activity
+- Feelings report: monthly counts, patterns (topics, hardest weekday) and a print view; diary words are never included
+- Backup: save and restore a backup file of everything (cloud sync is marked "coming soon")
+- Family: a separate garden, diary and friends for each child (stored under keys ending in `:<child id>`)
+
+To take real payments later, connect a payment provider (for example Stripe Checkout plus a small server or Cloudflare
+Worker that confirms who is subscribed) and replace the preview switch with that check. Made to be easy for everyone: big buttons, a very readable font,
 no timers, no scores and no ways to fail.
 
 ## Install it

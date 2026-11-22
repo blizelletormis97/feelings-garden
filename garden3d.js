@@ -374,19 +374,53 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
     return true;
   }
 
+  // ---------- garden themes (Premium): beach, snow and space ----------
+  const THEMES = {
+    beach: { ground: "#f3e2b3", soil: "#dcc08a", tuft: "#b9dea0", stone: "#f9d5d3", sky: "#cdeefc", nightSky: "#1c3246" },
+    snow: { ground: "#f3f7fb", soil: "#c3d2df", tuft: "#d8e6ee", stone: "#ffffff", sky: "#e1edf7", nightSky: "#1f2a3a", snow: true },
+    space: { ground: "#cbbcf2", soil: "#7f6cb8", tuft: "#e2d8ff", stone: "#f1ecff", sky: "#2b2456", nightSky: "#1b1738", alwaysNight: true },
+  };
+  let theme = "meadow";
+  function setTheme(name) { theme = THEMES[name] ? name : "meadow"; setColors(); }
+
+  // falling snow for the snow theme
+  const FLAKES = 160;
+  const snow = new THREE.InstancedMesh(new THREE.SphereGeometry(0.05, 6, 5), new THREE.MeshBasicMaterial({ color: 0xffffff }), FLAKES);
+  snow.frustumCulled = false;
+  snow.visible = false;
+  world.add(snow);
+  const flakes = Array.from({ length: FLAKES }, (_, i) => { const a = i * GOLDEN, r = 6.5 * Math.sqrt((i + 0.5) / FLAKES); return { x: Math.cos(a) * r, z: Math.sin(a) * r, y: (i * 0.37) % 6, sp: 0.35 + (i % 7) * 0.06, ph: i }; });
+  function stepSnow(t) {
+    if (!snow.visible) return;
+    flakes.forEach((f, k) => {
+      const y = reduceMotion ? f.y : 6 - ((6 - f.y + t * f.sp) % 6);
+      dummy.position.set(f.x + (reduceMotion ? 0 : Math.sin(t * 0.8 + f.ph) * 0.25), y, f.z);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.setScalar(1);
+      dummy.updateMatrix();
+      snow.setMatrixAt(k, dummy.matrix);
+    });
+    snow.instanceMatrix.needsUpdate = true;
+  }
+
   // ---------- colours and day or night ----------
   let night = false;
   function setColors() {
-    const skyCol = css("--sky");
+    const T = THEMES[theme];
+    const dark = new THREE.Color(css("--bg")).getHSL({}).l < 0.35;
+    night = dark || Boolean(T?.alwaysNight);
+    const skyCol = T ? (dark ? T.nightSky : T.sky) : css("--sky");
     scene.background = new THREE.Color(skyCol);
-    night = new THREE.Color(css("--bg")).getHSL({}).l < 0.35;
-    grassMat.color.set(css("--okay"));
-    soilMat.color.set(css("--soil"));
-    tuftMat.color.set("#9fd28c");
+    grassMat.color.set(T?.ground ?? css("--okay"));
+    soilMat.color.set(T?.soil ?? css("--soil"));
+    tuftMat.color.set(T?.tuft ?? "#9fd28c");
+    stoneMat.color.set(T?.stone ?? "#f3efe9");
+    snow.visible = Boolean(T?.snow);
+    stepSnow(performance.now() / 1000);
     stemMat.color.set("#8cc47a");
     leafMat.color.set("#a8d695");
     hemi.color.set(skyCol);
-    hemi.groundColor.set(css("--soil"));
+    hemi.groundColor.set(T?.soil ?? css("--soil"));
     hemi.intensity = night ? 1.25 : 1.6;
     sun.intensity = night ? 1.0 : 1.5;
     for (const [f, m] of Object.entries(petalMats)) tint(m, css(`--${f}`));
@@ -559,6 +593,7 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
     }
 
     if (stepRain(now)) busy = true;
+    stepSnow(t);
     if (stepSparks(dt)) busy = true;
     renderer.render(scene, camera);
     running = visible() && (!reduceMotion || busy || dragging);
@@ -573,5 +608,5 @@ export function createGarden3D(container, { onPick = () => {}, onFriend = () => 
   setColors();
   resize();
 
-  return { update, setColors, select, selectNext: (d) => select((selected < 0 ? -1 : selected) + d, true), water, canvas };
+  return { update, setColors, setTheme, select, selectNext: (d) => select((selected < 0 ? -1 : selected) + d, true), water, canvas };
 }
